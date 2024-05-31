@@ -21,6 +21,6 @@ jobs:
       with:
         context: .
         platforms: linux/amd64,linux/arm64
-        tags: CameronRedmore/DungeonManager:latest
+        tags: cameronredmore/dungeonmanager:latest
         secrets: |
           "github_token=${{ secrets.GITHUB_TOKEN }}"  
