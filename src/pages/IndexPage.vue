@@ -1,6 +1,6 @@
 <template>
   <q-page class="row items-center justify-evenly">
-    <q-card class="col-6 col-lg-4">
+    <q-card class="col-12 col-md-8 col-lg-6 col-xl-4">
       <q-card-section>
         <div class="text-h6 text-center">Select a Dungeon</div>
         <div class="text-caption text-center">Please select a <code>.dungeon</code> file from your Quest Master installation folder. (Usually <code>C:\Program Files Files (x86)\Steam\steamapps\common\Quest Master\Dungeons</code>)</div>
@@ -14,7 +14,7 @@
           <q-input v-model="dungeon.Version" label="Game Version" outlined readonly />
           <q-input v-model="dungeon.Name" label="Name" outlined />
           <q-input v-model="dungeon.Description" label="Description" outlined type="textarea" autogrow/>
-          <q-select v-model="dungeon.Theme" label="Theme" outlined :options="themes" />
+          <q-select v-model="dungeon.Theme" label="Theme" outlined :options="themes" map-options />
 
           <q-img :src="dungeon.getThumbnailUrl()" class="cursor-pointer" @click="replaceImage" />
         </q-card-section>
@@ -23,6 +23,10 @@
           <q-btn class="full-width" label="Save" color="primary" @click="saveDungeon" />
         </q-card-actions>
       </template>
+      <q-separator/>
+      <q-card-section>
+        <div class="text-caption text-center">This tool is not affiliated with <a href="//www.playquestmaster.com/">Quest Master</a> or its developers. Use at your own risk. I highly recommend backing up your dungeon before using this tool!</div>
+      </q-card-section>
     </q-card>
   </q-page>
 </template>
