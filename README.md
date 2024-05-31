@@ -1,6 +1,6 @@
 # Dungeon Manager
 ## What is Dungeon Master?
-Dungeon Manager is an online tool designed to be used with the game [https://www.playquestmaster.com/](Quest Master).
+Dungeon Manager is an online tool designed to be used with the game [Quest Master](https://www.playquestmaster.com).
 
 ## What can Dungeon Master do?
 Dungeon Manager currently enables modification of your `.dungeon` files, enabling changing of the Name, Description, Theme and the Thumbnail Image.
