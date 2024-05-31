@@ -7,7 +7,7 @@
         </q-toolbar-title>
 
         <q-space/>
-        <span class="text-subtitle1">v0.1.2a by <a class="text-weight-bold text-white text-no-decoration" style="text-decoration: none;" href="//cmzi.uk">Cameron Redmore</a></span>
+        <span class="text-subtitle1">v0.2.1a by <a class="text-weight-bold text-white text-no-decoration" style="text-decoration: none;" href="//cmzi.uk">Cameron Redmore</a></span>
       </q-toolbar>
     </q-header>
 
