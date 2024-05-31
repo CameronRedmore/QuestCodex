@@ -1,3 +1,5 @@
+import localforage from 'localforage';
+
 //Define a Dungeon type
 export class Dungeon {
   FileName: string;
@@ -69,13 +71,34 @@ export class Dungeon {
 };
 
 export class DungeonLoader {
-  static async loadDungeon(file: File): Promise<Dungeon> {
+  static async loadFromFile(file: File): Promise<Dungeon> {
     const content = await file.text();
-    const dungeon = JSON.parse(content);
+
+    const dungeon = this.loadFromJson(content, file.name);
+
+    this.saveDungeon(dungeon, false);
+
+    return dungeon;
+  }
+
+  static async loadFromLocalForage(id: string): Promise<Dungeon> {
+    const content = await localforage.getItem(`dungeon-${id}`) as string;
+
+    if (content === null) {
+      throw new Error('Dungeon not found');
+    }
+
+    const dungeon = this.loadFromJson(content, `${id}.dungeon`);
+
+    return dungeon;
+  }
+
+  static loadFromJson(json: string, fileName: string): Dungeon {
+    const dungeon = JSON.parse(json);
 
     //Create a new Dungeon object
     const newDungeon = new Dungeon(
-      file.name,
+      fileName,
       dungeon.Version,
       dungeon.Thumbnail,
       dungeon.Name,
@@ -91,24 +114,35 @@ export class DungeonLoader {
     return newDungeon;
   }
 
-  static saveDungeon(dungeon: Dungeon): void {
+  static dungeonToJson(dungeon: Dungeon): string {
     //Remove the filename property
-    const { ...dungeonWithoutFileName } = dungeon;
+    const { FileName, ...dungeonWithoutFileName } = dungeon;
 
-    const dungeonJson = JSON.stringify(dungeonWithoutFileName, null, 2);
+    console.log(FileName);
 
-    const blob = new Blob([dungeonJson], { type: 'application/json' });
-    const url = URL.createObjectURL(blob);
+    return JSON.stringify(dungeonWithoutFileName, null, 2);
+  }
 
-    const a = document.createElement('a');
+  static async saveDungeon(dungeon: Dungeon, download: boolean): Promise<void> {
+    //Remove the filename property
+    const dungeonJson = this.dungeonToJson(dungeon);
 
-    a.href = url;
-    a.download = dungeon.FileName;
+    await localforage.setItem(`dungeon-${dungeon.FileName.replace('.dungeon', '')}`, dungeonJson);
 
-    document.body.appendChild(a);
-    a.click();
+    if (download) {
+      const blob = new Blob([dungeonJson], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
 
-    document.body.removeChild(a);
-    URL.revokeObjectURL(url);
+      const a = document.createElement('a');
+
+      a.href = url;
+      a.download = dungeon.FileName;
+
+      document.body.appendChild(a);
+      a.click();
+
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+    }
   }
 }

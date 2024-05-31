@@ -1,6 +1,6 @@
 <template>
-  <q-page class="row items-center justify-evenly">
-    <q-card class="col-12 col-md-8 col-lg-6 col-xl-4">
+  <q-page class="row items-center justify-evenly q-gutter-md">
+    <q-card class="col-12 col-md-8 col-lg-5 col-xl-4">
       <q-card-section>
         <div class="text-h6 text-center">Select a Dungeon</div>
         <div class="text-caption text-center">Please select a <code>.dungeon</code> file from your Quest Master installation folder. (Usually <code>C:\Program Files Files (x86)\Steam\steamapps\common\Quest Master\Dungeons</code>)</div>
@@ -16,7 +16,7 @@
           <q-input v-model="dungeon.Description" label="Description" outlined type="textarea" autogrow/>
           <q-select v-model="dungeon.Theme" label="Theme" outlined :options="themes" map-options />
 
-          <q-img :src="dungeon.getThumbnailUrl()" class="cursor-pointer" @click="replaceImage" />
+          <q-img :src="dungeon.getThumbnailUrl()" class="cursor-pointer" v-ripple @click="replaceImage" />
         </q-card-section>
         <q-separator/>
         <q-card-actions>
@@ -32,13 +32,13 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from 'vue';
+import { ref, computed, defineEmits, defineExpose } from 'vue';
 
 import { Dungeon, DungeonLoader } from 'src/lib/DungeonLoader';
 
-defineOptions({
-  name: 'IndexPage'
-});
+const emit = defineEmits(['loadSavedDungeons']);
+
+defineExpose({ loadFile });
 
 const _file = ref<File | null>(null);
 const dungeon = ref<Dungeon | null>(null);
@@ -55,8 +55,10 @@ const file = computed({
   set: (value: File | null) => {
     _file.value = value;
     if (value) {
-      DungeonLoader.loadDungeon(value).then((loadedDungeon) => {
+      DungeonLoader.loadFromFile(value).then((loadedDungeon) => {
         dungeon.value = loadedDungeon;
+
+        emit('loadSavedDungeons');
       });
     }
     else
@@ -66,9 +68,16 @@ const file = computed({
   }
 });
 
-function saveDungeon() {
+function loadFile(toLoad: File) {
+  file.value = toLoad;
+}
+
+async function saveDungeon() {
   if (dungeon.value) {
-    DungeonLoader.saveDungeon(dungeon.value);
+    await DungeonLoader.saveDungeon(dungeon.value, true);
+
+    console.log('Loading saved dungeons');
+    emit('loadSavedDungeons');
   }
 }
 
