@@ -1,1 +1,1 @@
-# Quest Master Dungeon Manager (quest-master-dungeon-manager)
+# Quest Master Dungeon Manager
