@@ -3,10 +3,11 @@
     <q-header elevated>
       <q-toolbar>
         <q-toolbar-title>
-          <q-icon name="las la-dungeon" size="175%" /> QM | <strong>Dungeon Manager</strong>
+          <q-icon name="las la-dungeon" size="175%" /> QM | <span class="text-weight-bolder">Dungeon Manager</span>
         </q-toolbar-title>
 
-        <div>Dungeon Manager</div>
+        <q-space/>
+        <span class="text-subtitle1">v0.1 by <a class="text-weight-bold text-white text-no-decoration" style="text-decoration: none;" href="//cmzi.uk">Cameron Redmore</a></span>
       </q-toolbar>
     </q-header>
 
