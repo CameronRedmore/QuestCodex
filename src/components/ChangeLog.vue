@@ -29,6 +29,14 @@ import {ref} from 'vue';
 
 const versions = ref([
   {
+    number: '0.3.3b',
+    changes: 'Further improves styling & aesthetics.',
+  },
+  {
+    number: '0.3.3a',
+    changes: 'Adds in background image to improve aesthetics.',
+  },
+  {
     number: '0.3.2a',
     changes: 'Adds in confirmation & notification when saving files.',
   },

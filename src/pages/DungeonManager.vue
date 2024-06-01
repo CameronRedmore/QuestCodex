@@ -16,17 +16,13 @@
           <q-input v-model="dungeon.Description" label="Description" outlined type="textarea" autogrow/>
           <q-select v-model="dungeon.Theme" label="Theme" outlined :options="themes" map-options />
 
-          <q-img :src="dungeon.getThumbnailUrl()" class="cursor-pointer" v-ripple @click="replaceImage" />
+          <q-img :src="dungeon.getThumbnailUrl()" class="cursor-pointer rounded-borders" v-ripple @click="replaceImage" />
         </q-card-section>
         <q-separator/>
         <q-card-actions>
           <q-btn class="full-width" label="Save" color="primary" @click="saveDungeon" />
         </q-card-actions>
       </template>
-      <q-separator/>
-      <q-card-section>
-        <div class="text-caption text-center">This tool is not affiliated with <a href="//www.playquestmaster.com/">Quest Master</a> or its developers. Use at your own risk. I highly recommend backing up your dungeon before using this tool!</div>
-      </q-card-section>
     </q-card>
   </q-page>
 </template>

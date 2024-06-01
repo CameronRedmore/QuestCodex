@@ -8,6 +8,12 @@
 
         <q-space/>
 
+        <q-btn flat round dense icon="las la-adjust" @click="$q.dark.toggle()">
+          <q-tooltip>
+            Toggle Dark Mode
+          </q-tooltip>
+        </q-btn>
+
         <q-btn flat round dense icon="las la-save" @click="rightDrawer = !rightDrawer">
           <q-tooltip>
             Load Saved Dungeon
@@ -16,8 +22,13 @@
       </q-toolbar>
     </q-header>
 
-    <q-drawer :model-value="rightDrawer" side="right" overlay bordered persistent>
+    <q-drawer :model-value="rightDrawer" side="right" overlay bordered persistent :width="400">
       <q-list class="col-12 col-md-8 col-lg-6 col-xl-4">
+        <div class="rounded-borders q-ma-md" style="border: 1px solid #FFC107;">
+          <div class="text-subtitle2 text-center text-weight-bold q-pa-md">Disclaimer</div>
+          <div class="text-caption text-center q-px-md q-pb-md">This tool is not affiliated with <a class="text-white" href="//www.playquestmaster.com/">Quest Master</a> or its developers. Use at your own risk. I highly recommend backing up your dungeon before using this tool!</div>
+        </div>
+        <q-separator/>
         <div class="q-pa-md">
           <q-btn class="full-width q-mx-md q-mb-md" color="primary" outline @click="loadSavedDungeons">Load Dungeons From Directory</q-btn>
           <q-btn class="full-width q-mx-md" color="secondary" outline @click="changeDirectory">Change Directory</q-btn>
@@ -31,7 +42,8 @@
       <div class="text-h6 text-center"><span v-ripple class="cursor-pointer" @click="changelog = true">v{{ version }}</span> by <a class="text-weight-bold text-white text-no-decoration" style="text-decoration: none;" href="//cmzi.uk">Cameron Redmore</a></div>
     </q-footer>
 
-    <q-page-container>
+    <q-page-container class="relative">
+      <div class="absolute" style="inset: 0; background-image: url(/background.webp); background-size: cover; background-position: top center; filter: brightness(0.6) blur(2.5px);"></div>
       <dungeon-manager @loadSavedDungeons="loadSavedDungeons" ref="dungeonManager" />
     </q-page-container>
 

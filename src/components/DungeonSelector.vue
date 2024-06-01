@@ -2,8 +2,8 @@
   <div class="full-width">
     <!-- Left to Right, Image, Name -->
     <q-card-section class="row items-center cursor-pointer" v-if="dungeon" v-ripple @click.prevent="useDungeon">
-      <q-img class="col-3" :src="dungeon.getThumbnailUrl()" style="height: 5rem" />
-      <div class="col-9 text-h6 text-center">
+      <q-img class="col-5 rounded-borders" :src="dungeon.getThumbnailUrl()" style="height: 5rem" />
+      <div class="col-7 text-h6 text-center q-pa-xs">
         {{ dungeon.Name || "Unnamed" }}
       </div>
     </q-card-section>
