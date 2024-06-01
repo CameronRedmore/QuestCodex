@@ -1,8 +1,8 @@
 {
   "name": "quest-master-dungeon-manager",
-  "version": "0.3.3b",
+  "version": "0.3.3c",
   "description": "Dungeon Manager - A tool to manage Quest Master dungeons.",
-  "productName": "Quest Master Dungeon Manager",
+  "productName": "Dungeon Manager",
   "author": "Cameron Redmore <cameron@cmzi.uk>",
   "type": "module",
   "private": true,

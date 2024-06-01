@@ -16,7 +16,11 @@
           <q-input v-model="dungeon.Description" label="Description" outlined type="textarea" autogrow/>
           <q-select v-model="dungeon.Theme" label="Theme" outlined :options="themes" map-options />
 
-          <q-img :src="dungeon.getThumbnailUrl()" class="cursor-pointer rounded-borders" v-ripple @click="replaceImage" />
+          <q-img :src="dungeon.getThumbnailUrl()" class="cursor-pointer rounded-borders" v-ripple @click="replaceImage">
+            <q-tooltip anchor="top middle" self="bottom middle">
+              Click to Replace Image
+            </q-tooltip>
+          </q-img>
         </q-card-section>
         <q-separator/>
         <q-card-actions>

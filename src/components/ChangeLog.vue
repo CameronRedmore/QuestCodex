@@ -29,6 +29,11 @@ import {ref} from 'vue';
 
 const versions = ref([
   {
+    number: '0.3.3c',
+    changes: 'Change product name & add favicon.',
+    codeName: 'The Branding Update'
+  },
+  {
     number: '0.3.3b',
     changes: 'Further improves styling & aesthetics.',
   },
