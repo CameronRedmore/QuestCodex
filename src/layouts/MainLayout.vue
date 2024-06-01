@@ -22,20 +22,24 @@
       </q-toolbar>
     </q-header>
 
-    <q-drawer :model-value="rightDrawer" side="right" overlay bordered persistent :width="400">
-      <q-list class="col-12 col-md-8 col-lg-6 col-xl-4">
-        <div class="rounded-borders q-ma-md" style="border: 1px solid #FFC107;">
-          <div class="text-subtitle2 text-center text-weight-bold q-pa-md">Disclaimer</div>
-          <div class="text-caption text-center q-px-md q-pb-md">This tool is not affiliated with <a class="text-white" href="//www.playquestmaster.com/">Quest Master</a> or its developers. Use at your own risk. I highly recommend backing up your dungeon before using this tool!</div>
-        </div>
-        <q-separator/>
+    <q-drawer :model-value="rightDrawer" side="right" overlay bordered persistent :width="400" class="relative">
+      <div style="height: 121px">
         <div class="q-pa-md">
           <q-btn class="full-width q-mx-md q-mb-md" color="primary" outline @click="loadSavedDungeons">Load Dungeons From Directory</q-btn>
           <q-btn class="full-width q-mx-md" color="secondary" outline @click="changeDirectory">Change Directory</q-btn>
         </div>
         <q-separator/>
-        <dungeon-selector v-for="dungeon in savedDungeons" :key="dungeon" :dungeonID="dungeon" @useDungeon="useDungeon" :ref="setItemRef"/>
+      </div>
+      <q-list class="col-12 col-md-8 col-lg-6 col-xl-4 scroll" style="max-height: calc(100% - (121px + 164px))">
+        <dungeon-selector v-for="(dungeon,i) in savedDungeons" :key="dungeon + '_' + i" :dungeonID="dungeon" @useDungeon="useDungeon" :ref="setItemRef" :lastItem="i == savedDungeons.length - 1"/>
       </q-list>
+      <div style="height: 164px" class="absolute-bottom">
+        <q-separator/>
+        <div class="rounded-borders q-ma-md" style="border: 1px solid #FFC107;">
+          <div class="text-subtitle2 text-center text-weight-bold q-pa-md">Disclaimer</div>
+          <div class="text-caption text-center q-px-md q-pb-md">This tool is not affiliated with <a class="text-white" href="//www.playquestmaster.com/">Quest Master</a> or its developers. Use at your own risk. I highly recommend backing up your dungeon before using this tool!</div>
+        </div>
+      </div>
     </q-drawer>
 
     <q-footer>

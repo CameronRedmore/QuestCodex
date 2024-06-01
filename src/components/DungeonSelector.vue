@@ -7,7 +7,7 @@
         {{ dungeon.Name || "Unnamed" }}
       </div>
     </q-card-section>
-    <q-separator />
+    <q-separator v-if="!lastItem"/>
   </div>
 </template>
 
@@ -16,7 +16,8 @@ import { ref, defineProps, onMounted, defineEmits, computed, defineExpose } from
 import { Dungeon, DungeonLoader } from '../lib/DungeonLoader'
 
 const props = defineProps({
-  dungeonID: String
+  dungeonID: String,
+  lastItem: Boolean
 });
 
 const dungeon = ref<Dungeon | null>(null);
