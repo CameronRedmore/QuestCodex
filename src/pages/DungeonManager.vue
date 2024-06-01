@@ -36,6 +36,9 @@ import { ref, computed, defineEmits, defineExpose } from 'vue';
 
 import { Dungeon, DungeonLoader } from 'src/lib/DungeonLoader';
 
+import { useQuasar } from 'quasar';
+
+const $q = useQuasar();
 const emit = defineEmits(['loadSavedDungeons']);
 
 defineExpose({ loadFile });
@@ -73,11 +76,20 @@ function loadFile(toLoad: File) {
 }
 
 async function saveDungeon() {
-  if (dungeon.value) {
-    await DungeonLoader.saveDungeon(dungeon.value, true);
+  //Confirm the user wants to save
+  $q.dialog({
+    title: 'Confirm',
+    message: `Are you sure you wish to save the Dungeon<br/><code>${dungeon.value?.FileName}</code>?<br/><br/>A backup of the current file will be created in the same directory with the current date & time.`,
+    cancel: true,
+    persistent: true,
+    html: true
+  }).onOk(async () => {
+    if (dungeon.value) {
+      await DungeonLoader.saveDungeon(dungeon.value);
 
-    emit('loadSavedDungeons');
-  }
+      emit('loadSavedDungeons');
+    }
+  });
 }
 
 function replaceImage() {

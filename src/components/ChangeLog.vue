@@ -29,6 +29,10 @@ import {ref} from 'vue';
 
 const versions = ref([
   {
+    number: '0.3.2a',
+    changes: 'Adds in confirmation & notification when saving files.',
+  },
+  {
     number: '0.3.1a',
     changes: 'Enables saving of Directory Reference, allowing you to load dungeons from a previously selected directory without re-selecting.<br/>Adds a changelog page.',
   },

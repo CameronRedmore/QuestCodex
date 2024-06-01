@@ -32,7 +32,7 @@
     </q-footer>
 
     <q-page-container>
-      <index-page @loadSavedDungeons="loadSavedDungeons" ref="index" />
+      <dungeon-manager @loadSavedDungeons="loadSavedDungeons" ref="dungeonManager" />
     </q-page-container>
 
     <q-dialog v-model="changelog">
@@ -44,7 +44,7 @@
 <script setup lang="ts">
 import {ref, onMounted} from 'vue';
 import { DungeonLoader } from 'src/lib/DungeonLoader';
-import IndexPage from 'src/pages/IndexPage.vue';
+import DungeonManager from 'src/pages/DungeonManager.vue';
 import DungeonSelector from 'src/components/DungeonSelector.vue';
 import ChangeLog from 'src/components/ChangeLog.vue';
 
@@ -56,7 +56,7 @@ const rightDrawer = ref<boolean>(true);
 
 const savedDungeons = ref<string[]>([]);
 
-const index = ref<InstanceType<typeof IndexPage> | null>(null);
+const dungeonManager = ref<InstanceType<typeof DungeonManager> | null>(null);
 
 const $q = useQuasar();
 
@@ -98,10 +98,10 @@ async function useDungeon(dungeonJson: string, fileName: string) {
     cancel: true,
     persistent: true
   }).onOk(() => {
-    if (index.value) {
+    if (dungeonManager.value) {
       //Create file from JSON
       const dungeonFile = new File([dungeonJson], fileName, { type: 'application/json' });
-      index.value.loadFile(dungeonFile);
+      dungeonManager.value.loadFile(dungeonFile);
     }
   });
 }

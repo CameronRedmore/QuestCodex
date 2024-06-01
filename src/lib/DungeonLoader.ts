@@ -81,8 +81,6 @@ export class DungeonLoader {
 
     const dungeon = this.loadFromJson(content, file.name);
 
-    this.saveDungeon(dungeon, false);
-
     return dungeon;
   }
 
@@ -139,62 +137,84 @@ export class DungeonLoader {
     return JSON.stringify(dungeonWithoutFileName, null, 2);
   }
 
-  static async saveDungeon(dungeon: Dungeon, download: boolean): Promise<void> {
-    //Remove the filename property
+  static async saveDungeon(dungeon: Dungeon): Promise<void> {
     const dungeonJson = this.dungeonToJson(dungeon);
 
-    //await localforage.setItem(`dungeon-${dungeon.FileName.replace('.dungeon', '')}`, dungeonJson);
+    if (this.directoryHandle === null) {
+      const blob = new Blob([dungeonJson], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
 
-    if (download) {
+      const a = document.createElement('a');
 
-      if (this.directoryHandle === null) {
-        const blob = new Blob([dungeonJson], { type: 'application/json' });
-        const url = URL.createObjectURL(blob);
+      a.href = url;
+      a.download = dungeon.FileName || 'dungeon.json';
 
-        const a = document.createElement('a');
+      document.body.appendChild(a);
+      a.click();
 
-        a.href = url;
-        a.download = dungeon.FileName || 'dungeon.json';
-
-        document.body.appendChild(a);
-        a.click();
-
-        document.body.removeChild(a);
-        URL.revokeObjectURL(url);
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+    }
+    else {
+      if (dungeon.FileName === undefined) {
+        throw new Error('Dungeon file name is undefined');
       }
-      else {
-        if (dungeon.FileName === undefined) {
-          throw new Error('Dungeon file name is undefined');
-        }
-        //If the file already exists, back it up
-        try {
+      //If the file already exists, back it up
+      try {
 
-          const existingFileHandle = await this.directoryHandle.getFileHandle(dungeon.FileName);
-          const existingFile = await existingFileHandle.getFile();
+        Notify.create({
+          message: 'Backing up dungeon file. Please wait...',
+          color: 'primary',
+          position: 'top'
+        });
 
-          const backupFileName = `${dungeon.FileName}.${dayjs().format('YYYY-MM-DDTHH-mm-ss')}.bak`;
+        const existingFileHandle = await this.directoryHandle.getFileHandle(dungeon.FileName);
+        const existingFile = await existingFileHandle.getFile();
 
-          const backupFileHandle = await this.directoryHandle.getFileHandle(backupFileName, { create: true });
-          const writable = await backupFileHandle.createWritable();
+        const backupFileName = `${dungeon.FileName}.${dayjs().format('YYYY-MM-DDTHH-mm-ss')}.bak`;
 
-          const reader = new FileReader();
-          reader.readAsText(existingFile);
+        const backupFileHandle = await this.directoryHandle.getFileHandle(backupFileName, { create: true });
+        const writable = await backupFileHandle.createWritable();
 
-          reader.onload = () => {
-            writable.write(reader.result as string);
-            writable.close();
+        const reader = new FileReader();
+        reader.readAsText(existingFile);
+
+        await new Promise<void>((resolve) => {
+          reader.onload = async () => {
+            await writable.write(reader.result as string);
+            await writable.close();
+
+            Notify.create({
+              message: 'Backup created successfully at "' + backupFileName + '"!',
+              color: 'positive',
+              position: 'top'
+            });
+
+            resolve();
           };
-        }
-        catch (e) {
-          console.log(e);
-        }
-
-        const fileHandle = await this.directoryHandle.getFileHandle(dungeon.FileName, { create: true });
-        const writable = await fileHandle.createWritable();
-
-        await writable.write(dungeonJson);
-        await writable.close();
+        });
       }
+      catch (e) {
+        console.log(e);
+      }
+
+      Notify.create({
+        message: 'Saving dungeon file. Please wait...',
+        color: 'primary',
+        position: 'top'
+      });
+
+      const fileHandle = await this.directoryHandle.getFileHandle(dungeon.FileName, { create: true });
+      const writable = await fileHandle.createWritable();
+
+      await writable.write(dungeonJson);
+      await writable.close();
+
+      Notify.create({
+        message: 'Dungeon saved successfully to "' + dungeon.FileName + '"!',
+        color: 'positive',
+        position: 'top'
+      });
     }
   }
 
