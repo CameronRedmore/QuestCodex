@@ -95,14 +95,37 @@ async function saveDungeon() {
 function replaceImage() {
   //Create a new file input element
   const fileInput = document.createElement('input');
+
+  const allowedTypes = ['image/png', 'image/jpeg', 'image/webp'];
+
   fileInput.type = 'file';
-  fileInput.accept = 'image/*';
+  fileInput.accept = allowedTypes.join(',');
   fileInput.addEventListener('change', (event) => {
 
     const target = event.target as HTMLInputElement;
 
     if (target.files && target.files.length > 0) {
       const file = target.files[0];
+
+      const sizeLimit = 1;
+
+      if (file.size > sizeLimit * 1024 * 1024) {
+        $q.notify({
+          type: 'negative',
+          message: `Image is too large. Please select an image smaller than ${sizeLimit}MiB.`
+        });
+        return;
+      }
+
+      //Check if the file is in the correct format
+      if (!allowedTypes.includes(file.type)) {
+        $q.notify({
+          type: 'negative',
+          message: 'Invalid file type. Please select a PNG, JPEG or WebP image.'
+        });
+        return;
+      }
+
       dungeon.value?.setThumbnail(file);
 
       //Remove the file input element

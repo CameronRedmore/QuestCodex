@@ -29,6 +29,10 @@ import {ref} from 'vue';
 
 const versions = ref([
   {
+    number: '0.3.4a',
+    changes: 'General system stability improvements were made to enhance the user\'s experience.'
+  },
+  {
     number: '0.3.3c',
     changes: 'Change product name & add favicon.',
     codeName: 'The Branding Update'
@@ -51,7 +55,7 @@ const versions = ref([
   },
   {
     number: '0.3.0a',
-    changes: 'Implements the File System API for loading an entire directory of dungeons at once.',
+    changes: 'Replaces history functionality.<br/>Implements the File System API for loading an entire directory of dungeons at once.',
     major: true,
     codeName: 'The Directory Update',
   },
