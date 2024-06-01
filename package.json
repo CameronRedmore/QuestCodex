@@ -1,7 +1,7 @@
 {
   "name": "quest-master-dungeon-manager",
-  "version": "0.0.1",
-  "description": "A Dungeon manager project for Quest Master.",
+  "version": "0.3.0",
+  "description": "Dungeon Manager - A tool to manage Quest Master dungeons.",
   "productName": "Quest Master Dungeon Manager",
   "author": "Cameron Redmore <cameron@cmzi.uk>",
   "type": "module",
@@ -16,6 +16,7 @@
   "dependencies": {
     "@quasar/extras": "^1.16.11",
     "axios": "^1.2.1",
+    "dayjs": "^1.11.11",
     "localforage": "^1.10.0",
     "quasar": "^2.16.0",
     "register-service-worker": "^1.7.2",
@@ -25,6 +26,7 @@
   "devDependencies": {
     "@quasar/app-vite": "^2.0.0-beta.12",
     "@types/node": "^20.5.9",
+    "@types/wicg-file-system-access": "^2023.10.5",
     "@typescript-eslint/eslint-plugin": "^6.6.0",
     "@typescript-eslint/parser": "^6.6.0",
     "autoprefixer": "^10.4.2",

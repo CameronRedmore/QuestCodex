@@ -1,8 +1,11 @@
 import localforage from 'localforage';
+import dayjs from 'dayjs';
+
+import { Dialog, Notify } from 'quasar';
 
 //Define a Dungeon type
 export class Dungeon {
-  FileName: string;
+  FileName?: string;
   Version: string;
   Thumbnail: string;
   Name: string;
@@ -10,7 +13,7 @@ export class Dungeon {
   Theme: string;
   Color: string;
   Tags: string[];
-  ModId: string | null;
+  ModId?: string;
   Favorite: boolean;
   Floors: object;
 
@@ -24,7 +27,7 @@ export class Dungeon {
     theme: string,
     color: string,
     tags: string[],
-    modId: string | null,
+    modId: string,
     favorite: boolean,
     floors: object
   ) {
@@ -71,6 +74,8 @@ export class Dungeon {
 };
 
 export class DungeonLoader {
+  static directoryHandle: FileSystemDirectoryHandle | null = null;
+
   static async loadFromFile(file: File): Promise<Dungeon> {
     const content = await file.text();
 
@@ -79,6 +84,18 @@ export class DungeonLoader {
     this.saveDungeon(dungeon, false);
 
     return dungeon;
+  }
+
+  static async loadFromFileSystem(fileName: string): Promise<Dungeon | null> {
+    if (!this.directoryHandle) {
+      return null;
+    }
+
+    const fileHandle = await this.directoryHandle.getFileHandle(fileName);
+    const file = await fileHandle.getFile();
+
+    //Create backup of the file
+    return this.loadFromFile(file);
   }
 
   static async loadFromLocalForage(id: string): Promise<Dungeon> {
@@ -116,9 +133,8 @@ export class DungeonLoader {
 
   static dungeonToJson(dungeon: Dungeon): string {
     //Remove the filename property
-    const { FileName, ...dungeonWithoutFileName } = dungeon;
-
-    console.log(FileName);
+    const dungeonWithoutFileName = { ...dungeon };
+    delete dungeonWithoutFileName.FileName;
 
     return JSON.stringify(dungeonWithoutFileName, null, 2);
   }
@@ -127,22 +143,94 @@ export class DungeonLoader {
     //Remove the filename property
     const dungeonJson = this.dungeonToJson(dungeon);
 
-    await localforage.setItem(`dungeon-${dungeon.FileName.replace('.dungeon', '')}`, dungeonJson);
+    //await localforage.setItem(`dungeon-${dungeon.FileName.replace('.dungeon', '')}`, dungeonJson);
 
     if (download) {
-      const blob = new Blob([dungeonJson], { type: 'application/json' });
-      const url = URL.createObjectURL(blob);
 
-      const a = document.createElement('a');
+      if (this.directoryHandle === null) {
+        const blob = new Blob([dungeonJson], { type: 'application/json' });
+        const url = URL.createObjectURL(blob);
 
-      a.href = url;
-      a.download = dungeon.FileName;
+        const a = document.createElement('a');
 
-      document.body.appendChild(a);
-      a.click();
+        a.href = url;
+        a.download = dungeon.FileName || 'dungeon.json';
 
-      document.body.removeChild(a);
-      URL.revokeObjectURL(url);
+        document.body.appendChild(a);
+        a.click();
+
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+      }
+      else {
+        if (dungeon.FileName === undefined) {
+          throw new Error('Dungeon file name is undefined');
+        }
+        //If the file already exists, back it up
+        try {
+
+          const existingFileHandle = await this.directoryHandle.getFileHandle(dungeon.FileName);
+          const existingFile = await existingFileHandle.getFile();
+
+          const backupFileName = `${dungeon.FileName}.${dayjs().format('YYYY-MM-DDTHH-mm-ss')}.bak`;
+
+          const backupFileHandle = await this.directoryHandle.getFileHandle(backupFileName, { create: true });
+          const writable = await backupFileHandle.createWritable();
+
+          const reader = new FileReader();
+          reader.readAsText(existingFile);
+
+          reader.onload = () => {
+            writable.write(reader.result as string);
+            writable.close();
+          };
+        }
+        catch (e) {
+          console.log(e);
+        }
+
+        const fileHandle = await this.directoryHandle.getFileHandle(dungeon.FileName, { create: true });
+        const writable = await fileHandle.createWritable();
+
+        await writable.write(dungeonJson);
+        await writable.close();
+      }
     }
+  }
+
+  static async loadAllDungeons(): Promise<string[]> {
+    await new Promise((resolve) => {
+      if (this.directoryHandle === null) {
+        Dialog.create({
+          title: 'Please Select Your Quest Master Dungeons Folder',
+          message: 'Please select the folder where your Quest Master dungeons are stored. Usually C:\\Program Files (x86)\\Steam\\steamapps\\common\\Quest Master\\Dungeons',
+        }).onOk(async () => {
+          this.directoryHandle = await window.showDirectoryPicker();
+          resolve(this.directoryHandle);
+        });
+      }
+      else {
+        resolve(this.directoryHandle);
+      }
+    });
+
+    if (this.directoryHandle === null) {
+      Notify.create({
+        type: 'negative',
+        message: 'Cannot load dungeons directory',
+      });
+
+      return [];
+    }
+
+    const dungeons: string[] = [];
+
+    for await (const entry of this.directoryHandle.values()) {
+      if (entry.kind === 'file' && entry.name.endsWith('.dungeon')) {
+        dungeons.push(entry.name);
+      }
+    }
+
+    return dungeons;
   }
 }

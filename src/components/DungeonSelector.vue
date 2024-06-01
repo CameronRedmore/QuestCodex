@@ -12,7 +12,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, defineProps, onMounted, defineEmits, computed } from 'vue'
+import { ref, defineProps, onMounted, defineEmits, computed, defineExpose } from 'vue'
 import { Dungeon, DungeonLoader } from '../lib/DungeonLoader'
 
 const props = defineProps({
@@ -23,14 +23,22 @@ const dungeon = ref<Dungeon | null>(null);
 
 const dungeonId = computed(() => props.dungeonID?.split('::_::')[0]);
 
+const reload = async () => {
+  if (dungeonId.value) {
+    dungeon.value = await DungeonLoader.loadFromFileSystem(dungeonId.value);
+  }
+};
+
 onMounted(async () => {
-  dungeon.value = await DungeonLoader.loadFromLocalForage(dungeonId.value as string);
+  reload();
 });
 
 const emit = defineEmits(['useDungeon']);
 
 const useDungeon = () => {
-  emit('useDungeon', DungeonLoader.dungeonToJson(dungeon.value as Dungeon), dungeonId.value + '.dungeon' as string);
+  emit('useDungeon', DungeonLoader.dungeonToJson(dungeon.value as Dungeon), dungeonId.value as string);
 };
+
+defineExpose({ reload });
 
 </script>

@@ -1,9 +1,9 @@
 <template>
-  <q-page class="row items-center justify-evenly q-gutter-md">
+  <q-page class="row items-center justify-evenly q-gutter-md q-pa-md">
     <q-card class="col-12 col-md-8 col-lg-5 col-xl-4">
       <q-card-section>
         <div class="text-h6 text-center">Select a Dungeon</div>
-        <div class="text-caption text-center">Please select a <code>.dungeon</code> file from your Quest Master installation folder. (Usually <code>C:\Program Files Files (x86)\Steam\steamapps\common\Quest Master\Dungeons</code>)</div>
+        <div class="text-caption text-center">Please select a <code>.dungeon</code> file from your Quest Master installation folder. (Usually <code>C:\Program Files (x86)\Steam\steamapps\common\Quest Master\Dungeons</code>)</div>
       </q-card-section>
       <q-card-section>
         <q-file v-model="file" label="Select a Quest Master .dungeon file" accept=".dungeon" clearable outlined />
@@ -76,7 +76,6 @@ async function saveDungeon() {
   if (dungeon.value) {
     await DungeonLoader.saveDungeon(dungeon.value, true);
 
-    console.log('Loading saved dungeons');
     emit('loadSavedDungeons');
   }
 }
