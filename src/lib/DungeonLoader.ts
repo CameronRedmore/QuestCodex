@@ -198,16 +198,62 @@ export class DungeonLoader {
     }
   }
 
-  static async loadAllDungeons(): Promise<string[]> {
-    await new Promise((resolve) => {
-      if (this.directoryHandle === null) {
-        Dialog.create({
-          title: 'Please Select Your Quest Master Dungeons Folder',
-          message: 'Please select the folder where your Quest Master dungeons are stored. Usually C:\\Program Files (x86)\\Steam\\steamapps\\common\\Quest Master\\Dungeons',
-        }).onOk(async () => {
-          this.directoryHandle = await window.showDirectoryPicker();
+  static async chooseDirectory(): Promise<FileSystemDirectoryHandle> {
+    return new Promise((resolve, reject) => {
+      Dialog.create({
+        title: 'Please Select Your Quest Master Dungeons Folder',
+        message: 'Please select the folder where your Quest Master dungeons are stored. Usually C:\\Program Files (x86)\\Steam\\steamapps\\common\\Quest Master\\Dungeons',
+      }).onOk(async () => {
+        this.directoryHandle = await window.showDirectoryPicker();
+
+        const permission = await this.directoryHandle.requestPermission({ mode: 'readwrite' });
+
+        if (permission === 'granted') {
           resolve(this.directoryHandle);
-        });
+        }
+        else {
+          Notify.create({
+            type: 'negative',
+            message: 'Permission denied to access dungeons directory, unable to load dungeons.',
+          });
+          reject();
+        }
+
+        await localforage.setItem('dungeonDirectoryHandle', this.directoryHandle);
+
+        resolve(this.directoryHandle);
+      });
+    });
+  }
+
+  static async loadAllDungeons(): Promise<string[]> {
+    await new Promise(async (resolve, reject) => {
+      if (this.directoryHandle === null) {
+
+        //Try to load from localforage
+        const dungeonDirectoryHandle = await localforage.getItem('dungeonDirectoryHandle') as FileSystemDirectoryHandle | null;
+
+        if (dungeonDirectoryHandle) {
+          this.directoryHandle = dungeonDirectoryHandle;
+
+          let permission = await this.directoryHandle.queryPermission({ mode: 'readwrite' });
+
+          if (permission === 'granted') {
+            resolve(this.directoryHandle);
+          }
+          else {
+            permission = await this.directoryHandle.requestPermission({ mode: 'readwrite' });
+
+            Notify.create({
+              type: 'negative',
+              message: 'Permission denied to access dungeons directory, unable to load dungeons.',
+            });
+            reject();
+          }
+        }
+        else {
+          resolve(await this.chooseDirectory());
+        }
       }
       else {
         resolve(this.directoryHandle);
