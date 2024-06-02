@@ -31,6 +31,11 @@ import {ref} from 'vue';
 
 const versions = ref([
   {
+    number: '0.4.1a',
+    changes: 'Minor branding update.',
+    major: false,
+  },
+  {
     number: '0.4.0a',
     changes: 'Adds in a Dungeon Viewer! This is still a heavy WIP, so expect lots of broken stuff, missing assets etc.',
     major: true,

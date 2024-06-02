@@ -3,7 +3,7 @@
     <q-header bordered>
       <q-toolbar>
         <q-toolbar-title>
-          <q-icon name="las la-dungeon" size="175%" /> QM | <span class="text-weight-bolder">Dungeon Manager</span>
+          <q-icon name="las la-dungeon" size="175%" /> QM | <span class="text-weight-bolder">Quest Codex</span>
         </q-toolbar-title>
 
         <q-space/>
