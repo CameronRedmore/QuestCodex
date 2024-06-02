@@ -3,7 +3,7 @@
     <q-header bordered>
       <q-toolbar>
         <q-toolbar-title>
-          <q-icon name="las la-dungeon" size="175%" /> QM | <span class="text-weight-bolder">Quest Codex</span>
+          <q-icon name="las la-dungeon" size="175%" /> QM | <span class="text-weight-bolder">Quest Codex</span><span class="text-subtitle1" v-if="latestCodeName"> - {{ latestCodeName }}</span>
         </q-toolbar-title>
 
         <q-space/>
@@ -67,6 +67,7 @@ import ChangeLog from 'src/components/ChangeLog.vue';
 import { version } from '../../package.json';
 
 import { useQuasar } from 'quasar';
+import { latestCodeName } from 'src/lib/Version';
 
 const rightDrawer = ref<boolean>(true);
 

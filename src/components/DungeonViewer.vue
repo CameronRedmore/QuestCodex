@@ -146,7 +146,7 @@ const setupColours = () => {
 
 const resetCanvas = () => {
   //Set canvas width to input width, height to 75vh
-  canvas.value!.width = canvas.value!.parentElement!.clientWidth - 50;
+  canvas.value!.width = canvas.value!.parentElement!.clientWidth - 32;
 
   canvas.value!.height = window.innerHeight * 0.65;
 
@@ -328,6 +328,8 @@ const drawDungeon = async () => {
     const anyEntity = entity as any;
     const sprite = spriteCache.get(anyEntity.Entity);
 
+    ctx.globalAlpha = anyEntity.Invisible ? 0.25 : 1;
+
     if (sprite) {
       let offsetX = 0;
 
@@ -340,8 +342,31 @@ const drawDungeon = async () => {
         offsetX = themeOffset * spriteSize;
       }
 
-      //Draw the sprite, offset by negative half a tile
-      ctx.drawImage(sprite, offsetX, 0, spriteSize, spriteSize, (anyEntity.Position.X - 0.5) * tileSize, (anyEntity.Position.Y - 0.5) * tileSize, tileSize, tileSize);
+      //If the entity has a rotation, rotate the sprite
+      if(anyEntity.Rotation)
+      {
+        //Create a temporary canvas to draw the rotated sprite onto
+        const tempCanvas = document.createElement('canvas');
+        const tempCtx = tempCanvas.getContext('2d');
+
+        if(tempCtx)
+        {
+          tempCanvas.width = spriteSize;
+          tempCanvas.height = spriteSize;
+
+          tempCtx.translate(spriteSize / 2, spriteSize / 2);
+          tempCtx.rotate(anyEntity.Rotation * Math.PI / 180);
+          tempCtx.drawImage(sprite, offsetX, 0, spriteSize, spriteSize, -spriteSize / 2, -spriteSize / 2, spriteSize, spriteSize);
+
+          ctx.drawImage(tempCanvas, (anyEntity.Position.X - 0.5) * tileSize, (anyEntity.Position.Y - 0.5) * tileSize, tileSize, tileSize);
+        }
+
+        tempCanvas.remove();
+      }
+      else
+      {
+        ctx.drawImage(sprite, offsetX, 0, spriteSize, spriteSize, (anyEntity.Position.X - 0.5) * tileSize, (anyEntity.Position.Y - 0.5) * tileSize, tileSize, tileSize);
+      }
     }
     else
     {
@@ -349,6 +374,18 @@ const drawDungeon = async () => {
       ctx.fillStyle = '#ff0000';
 
       ctx.fillRect((anyEntity.Position.X - 0.25) * tileSize, (anyEntity.Position.Y - 0.25) * tileSize, tileSize / 2, tileSize / 2);
+    }
+    if(anyEntity.Wings)
+    {
+      ctx.globalAlpha = 0.75;
+      //Draw Wings on top of the entity
+      const wings = spriteCache.get(TileType.Wings);
+
+      if(wings)
+      {
+        ctx.drawImage(wings, 0, 0, spriteSize, spriteSize, (anyEntity.Position.X - 0.25) * tileSize, (anyEntity.Position.Y - 0.25) * tileSize, tileSize / 2, tileSize / 2);
+      }
+      ctx.globalAlpha = 1;
     }
   }
 

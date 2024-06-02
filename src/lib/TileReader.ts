@@ -10,6 +10,8 @@ export enum DungeonTheme {
 export enum TileType {
   Empty = '-1',
 
+  Wings = '-2',
+
   /*
     Terrain
   */
@@ -36,8 +38,8 @@ export enum TileType {
   LockedDoor = '2a9b06111e1cac149b6e893ddbab2d5a',
   BigDoorEntrance = '744e1c00885e2ac42952b2b153459d4c',
   BigDoorExit = '0513a56b798a748d9a2c9ad85561362b',
-  StairsUp = '6726e8ab98444324cbc25dbcb4e8b40f',
-  StairsDown = '3c9dbea1c2774464b800a4132dcaa755',
+  UpwardStairwell = '6726e8ab98444324cbc25dbcb4e8b40f',
+  DownwardStairwell = '3c9dbea1c2774464b800a4132dcaa755',
   CrackedWall = 'a4cbc5ea17205ba4ea64fa64ce88da8d',
   Staircase = '17e266ad084564541aaf330af661041b',
 
@@ -110,7 +112,7 @@ export enum TileType {
   TripleFireBar = '9357eaf913451c341a7e832dcfb55bd8',
   QuadrupleFireBar = 'b865347e6bd40204daf0409c22140ce0',
   ArrowTrap = '4bf18c2673886441f84efe09b23c73f0',
-  TrapDoor = '76c514994084346769f8f787f54f46e1',
+  Trapdoor = '76c514994084346769f8f787f54f46e1',
   RollingSpikeTrap = 'f78c886d9de9842f0b2de82babbcf79a',
 
   //Breakable
