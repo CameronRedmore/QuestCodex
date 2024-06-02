@@ -2,7 +2,7 @@
   <div>
     <q-card>
       <q-toolbar class="bg-primary">
-        <q-toolbar-title class="text-h6 text-center q-px-none" style="margin-right: -32px;"><span class="text-weight-bolder">Dungeon Manager</span> v{{ version }}</q-toolbar-title>
+        <q-toolbar-title class="text-h6 text-center q-px-none" style="margin-right: -32px;"><span class="text-weight-bolder">Quest Codex</span> v{{ version }}</q-toolbar-title>
         <q-btn flat round dense icon="las la-times" @click="$emit('close')"></q-btn>
       </q-toolbar>
       <q-separator/>
