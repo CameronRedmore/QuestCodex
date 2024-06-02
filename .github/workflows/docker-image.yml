@@ -29,6 +29,6 @@ jobs:
         context: .
         platforms: linux/amd64,linux/arm64
         push: true
-        tags: ghcr.io/cameronredmore/dungeonmanager:latest
+        tags: ghcr.io/cameronredmore/questcodex:latest
         secrets: |
           "github_token=${{ secrets.GITHUB_TOKEN }}"  
