@@ -28,6 +28,9 @@
         </q-card-actions>
       </template>
     </q-card>
+
+    <dungeon-viewer :dungeon="dungeon" v-if="dungeon">
+    </dungeon-viewer>
   </q-page>
 </template>
 
@@ -35,6 +38,7 @@
 import { ref, computed, defineEmits, defineExpose } from 'vue';
 
 import { Dungeon, DungeonLoader } from 'src/lib/DungeonLoader';
+import DungeonViewer from 'src/components/DungeonViewer.vue';
 
 import { useQuasar } from 'quasar';
 
@@ -44,7 +48,7 @@ const emit = defineEmits(['loadSavedDungeons']);
 defineExpose({ loadFile });
 
 const _file = ref<File | null>(null);
-const dungeon = ref<Dungeon | null>(null);
+const dungeon = ref<Dungeon | null>();
 
 const themes = [
   { label: 'Sandswept Ruins', value: 'ea3c060410de3db47887d09894c50973' },

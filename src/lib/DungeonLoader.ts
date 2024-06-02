@@ -3,46 +3,41 @@ import dayjs from 'dayjs';
 
 import { Dialog, Notify } from 'quasar';
 
+export interface Floor {
+  Tilemaps: {
+    Palette: string[];
+    Rooms: Room[]
+  }
+  Entities: object[];
+}
+
+export interface Room {
+  Bounds: {
+    Position: {
+      X: number;
+      Y: number;
+    };
+    Size: {
+      X: number;
+      Y: number;
+    }
+  }
+  Tilemaps: object[];
+}
+
 //Define a Dungeon type
 export class Dungeon {
-  FileName?: string;
-  Version: string;
-  Thumbnail: string;
-  Name: string;
-  Description: string;
-  Theme: string;
-  Color: string;
-  Tags: string[];
-  ModId?: string;
-  Favorite: boolean;
-  Floors: object;
-
-  //Define a constructor
-  constructor(
-    fileName: string,
-    version: string,
-    thumbnail: string,
-    name: string,
-    description: string,
-    theme: string,
-    color: string,
-    tags: string[],
-    modId: string,
-    favorite: boolean,
-    floors: object
-  ) {
-    this.FileName = fileName;
-    this.Version = version;
-    this.Thumbnail = thumbnail;
-    this.Name = name;
-    this.Description = description;
-    this.Theme = theme;
-    this.Color = color;
-    this.Tags = tags;
-    this.ModId = modId;
-    this.Favorite = favorite;
-    this.Floors = floors;
-  }
+  FileName: string = '';
+  Version: string = '';
+  Thumbnail: string = '';
+  Name: string = '';
+  Description: string = '';
+  Theme: string = '';
+  Color: string = '';
+  Tags: string[] = [];
+  ModId?: string = '';
+  Favorite: boolean = false;
+  Floors: object = {};
 
   //Define a method to get the total number of floors
   getTotalFloors(): number {
@@ -92,7 +87,6 @@ export class DungeonLoader {
     const fileHandle = await this.directoryHandle.getFileHandle(fileName);
     const file = await fileHandle.getFile();
 
-    //Create backup of the file
     return this.loadFromFile(file);
   }
 
@@ -112,29 +106,33 @@ export class DungeonLoader {
     const dungeon = JSON.parse(json);
 
     //Create a new Dungeon object
-    const newDungeon = new Dungeon(
-      fileName,
-      dungeon.Version,
-      dungeon.Thumbnail,
-      dungeon.Name,
-      dungeon.Description,
-      dungeon.Theme,
-      dungeon.Color,
-      dungeon.Tags,
-      dungeon.ModId,
-      dungeon.Favorite,
-      dungeon.Floors
-    );
+    const newDungeon = new Dungeon();
+
+    //Copy the properties from the JSON object to the new Dungeon object
+    Object.assign(newDungeon, dungeon);
+
+    //Loop all floors, rooms and bounds, and set Y to negative
+    // for (const floor of Object.values(newDungeon.Floors)) {
+    //   for (const room of floor.Tilemaps.Rooms) {
+    //     room.Bounds.Position.Y = -room.Bounds.Position.Y;
+    //   }
+    // }
+
+    //Set the filename
+    newDungeon.FileName = fileName;
 
     return newDungeon;
   }
 
   static dungeonToJson(dungeon: Dungeon): string {
-    //Remove the filename property
-    const dungeonWithoutFileName = { ...dungeon };
-    delete dungeonWithoutFileName.FileName;
+    //Loop all floors, rooms and bounds, and set Y to negative
+    // for (const floor of Object.values(dungeon.Floors)) {
+    //   for (const room of floor.Tilemaps.Rooms) {
+    //     room.Bounds.Position.Y = -room.Bounds.Position.Y;
+    //   }
+    // }
 
-    return JSON.stringify(dungeonWithoutFileName, null, 2);
+    return JSON.stringify(dungeon);
   }
 
   static async saveDungeon(dungeon: Dungeon): Promise<void> {

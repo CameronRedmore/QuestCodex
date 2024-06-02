@@ -2517,6 +2517,11 @@ deep-is@^0.1.3:
   resolved "https://registry.yarnpkg.com/deep-is/-/deep-is-0.1.4.tgz#a6f2dce612fadd2ef1f519b73551f17e85199831"
   integrity sha512-oIPzksmTg4/MriiaYGO+okXDT7ztn/w3Eptv/+gSIdMdKsJo0u4CfYNFJPy+4SKMuCqGw2wxnA+URMg3t8a/bQ==
 
+deepclone@^1.0.2:
+  version "1.0.2"
+  resolved "https://registry.yarnpkg.com/deepclone/-/deepclone-1.0.2.tgz#1f38ec4d9214134997d03f92c7856fa97442bb74"
+  integrity sha512-qkPxF/vo0TBGDJYg9BI2V7nT4NdhFc7XIN/hZ840gkcGqT84l6dulLosaO15zkkDJRIGmTN2zdBzticBAD4aRA==
+
 deepmerge@^4.2.2:
   version "4.3.1"
   resolved "https://registry.yarnpkg.com/deepmerge/-/deepmerge-4.3.1.tgz#44b5f2147cd3b00d4b56137685966f26fd25dd4a"
@@ -5051,6 +5056,13 @@ table@^6.8.2:
     slice-ansi "^4.0.0"
     string-width "^4.2.3"
     strip-ansi "^6.0.1"
+
+tapi.js@^0.5.1:
+  version "0.5.1"
+  resolved "https://registry.yarnpkg.com/tapi.js/-/tapi.js-0.5.1.tgz#27658ec16baf28966241b74a36de1381b87793a1"
+  integrity sha512-ADE43ebW04HfiSKvryPmm26UQKn+gHaIUEFo4Gn+2BT89ZqLNbSAxt1NTfDO0HZ/kShu9AsmIZFkdjhxS8D+SQ==
+  dependencies:
+    deepclone "^1.0.2"
 
 tar-stream@^3.0.0:
   version "3.1.7"
